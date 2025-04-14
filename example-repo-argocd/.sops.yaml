@@ -1,0 +1,6 @@
+creation_rules:
+  - path_regex: '(age|enc).*\.yaml$'
+    key_groups:
+      - age:
+        - 'age10gq9dnmxf93p4mc84gmemh8wfwcj7um9wx48x5aax7g8fl3t653qgyt58h' # argo
+        - 'age1gn5yy9jmfznv8tugd798ey78f46y9hsksklm55a26jyvsxwwasmsmjzmj3' # developer

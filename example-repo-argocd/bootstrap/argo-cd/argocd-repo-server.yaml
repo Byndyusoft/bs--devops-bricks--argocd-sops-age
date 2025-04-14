@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-repo-server
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
+spec:
+  template:
+    spec:
+      volumes:
+      - name: sops-age-key
+        secret:
+          defaultMode: 420
+          secretName: sops-age-key
+      - name: cmp-tmp-sops-age
+        emptyDir: {}
+      - name: sops-age-plugin
+        configMap:
+          name: argocd-vault-plugins
+          items:
+          - key: sops-age-plugin.yaml
+            path: plugin.yaml
+            mode: 509
+      # Mount SA token for Kubernets auth
+      # Note: In 2.4.0 onward, there is a dedicated SA for repo-server (not default)
+      # Note: This is not fully supported for Kubernetes < v1.19
+      automountServiceAccountToken: true
+      containers:
+      - name: sops-age-plugin
+        command:
+          - /var/run/argocd/argocd-cmp-server
+        env:
+          - name: SOPS_AGE_KEY_FILE
+            value: /var/run/secrets/age-key.txt
+        image: 'ghcr.io/Byndyusoft/argocd-vault-sidecar-sops-age:v0.0.1'
+        resources: {}
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          seccompProfile:
+            type: RuntimeDefault
+        volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files
+          - mountPath: /home/argocd/cmp-server/config
+            name: sops-age-plugin
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins
+          - mountPath: /tmp
+            name: cmp-tmp-sops-age
+          - mountPath: /var/run/secrets
+            name: sops-age-key
+            readOnly: true
