@@ -87,7 +87,7 @@ spec:
         env:
           - name: SOPS_AGE_KEY_FILE
             value: /var/run/secrets/age-key.txt
-        image: 'ghcr.io/Byndyusoft/argocd-vault-sidecar-sops-age:v0.0.1'
+        image: 'ghcr.io/byndyusoft/bs--devops-bricks--argocd-sops-age:v0.0.1'
         resources: {}
         securityContext:
           allowPrivilegeEscalation: false

@@ -7,3 +7,7 @@
 **Репозиторий не является инструкцией по argocd autopilot.** Для сэтапа кластера через автопилот следует обратиться к официальной документации - https://argocd-autopilot.readthedocs.io/en/stable/.
 
 [Инструкция и пример](./example-repo-argocd/README.md)
+
+---
+
+Отдельная благодарность пользователю @eformat за репозиторий https://github.com/eformat/argocd-vault-sidecar
